@@ -19,3 +19,4 @@ sudo make || { echo 'samtools make failed'; exit 1; }
 # Download and install Bambino
 cd ..
 curl -OL https://cgwb.nci.nih.gov/cgi-bin/bambino?download_bambino_jar=bundle || { echo 'curl failed' ; exit 1; }
+mv bambino?download_bambino_jar=bundle bambino.jar
