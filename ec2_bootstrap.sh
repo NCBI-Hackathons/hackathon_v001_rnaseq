@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Set working directory here; make sure you have write access to it!
 WORK=/blast/rna
 
 set -e
@@ -8,7 +9,7 @@ cd $WORK
 # Download HISAT
 curl -O http://www.ccb.jhu.edu/software/hisat/downloads/hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error downloading HISAT"; exit 1; }
 unzip hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error unzipping HISAT"; exit 1; }
-sudo ln -s `pwd`/hisat-0.1.2-beta-Linux_x86_64/hisat /usr/local/ || { echo "hisat is already installed"; }
+sudo ln -s `pwd`/hisat-0.1.2-beta-Linux_x86_64/hisat /usr/local/bin || { echo "hisat is already installed"; }
 sudo ln -s `pwd`/hisat-0.1.2-beta-Linux_x86_64/hisat-build /usr/local/bin || { echo "hisat-build is already installed"; }
 # Download and make SAMTools
 curl -OL http://downloads.sourceforge.net/project/samtools/samtools/1.1/samtools-1.1.tar.bz2 || { echo 'curl failed' ; exit 1; }
