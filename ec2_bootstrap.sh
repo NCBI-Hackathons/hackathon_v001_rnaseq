@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
+# Downloads and installs: HISAT 0.1.2-beta, HISAT index for hg19, SAMTools 1.1, Bambino, Illumina iGenome for UCSC hg19
+set -e
 
 # Set working directory here; make sure you have write access to it!
 WORK=/blast/rna
-
-set -e
 
 cd $WORK
 # Download HISAT
@@ -16,7 +16,11 @@ curl -OL http://downloads.sourceforge.net/project/samtools/samtools/1.1/samtools
 tar xvjf samtools-1.1.tar.bz2 || { echo "samtools untar+gunzip failed" ; exit 1; }
 cd samtools-1.1
 sudo make || { echo 'samtools make failed'; exit 1; }
+# Download HISAT index
+curl -OL ftp://ftp.ccb.jhu.edu/pub/data/hisat_indexes/hg19_hisat.tar.gz || { echo 'error downloading UCSC hg19 HISAT index'; exit 1; }
+# Download hg19 iGenome
+curl -OL ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/UCSC/hg19/Homo_sapiens_UCSC_hg19.tar.gz
+tar xvzf Homo_sapiens_UCSC_hg19.tar.gz || { echo "iGenomes untar+gunzip failed"; exit 1; }
 # Download and install Bambino
 cd ..
-curl -OL https://cgwb.nci.nih.gov/cgi-bin/bambino?download_bambino_jar=bundle || { echo 'curl failed' ; exit 1; }
-mv bambino?download_bambino_jar=bundle bambino.jar
+curl -o bambino.jar -OL https://cgwb.nci.nih.gov/cgi-bin/bambino?download_bambino_jar=bundle || { echo 'curl failed' ; exit 1; }
