@@ -11,7 +11,7 @@ unzip hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error unzipping HISAT"; exit 
 sudo ln -s `pwd`/hisat-0.1.2-beta-Linux_x86_64/hisat /usr/local/
 sudo ln -s `pwd`/hisat-0.1.2-beta-Linux_x86_64/hisat-build /usr/local/bin
 # Download and make SAMTools
-sudo yum -y install ncurses-devel ncurses || { echo "curses installation failed" ; exit 1; }
+sudo apt-get install -f ncurses-dev ncurses || { echo "curses installation failed" ; exit 1; }
 curl -O http://downloads.sourceforge.net/project/samtools/samtools/1.1/samtools-1.1.tar.bz2 || { echo 'curl failed' ; exit 1; }
 tar xvjf samtools-1.1.tar.bz2 || { echo "samtools untar+gunzip failed" ; exit 1; }
 cd samtools-1.1
