@@ -18,6 +18,7 @@ cd samtools-1.1
 sudo make || { echo 'samtools make failed'; exit 1; }
 # Download HISAT index
 curl -OL ftp://ftp.ccb.jhu.edu/pub/data/hisat_indexes/hg19_hisat.tar.gz || { echo 'error downloading UCSC hg19 HISAT index'; exit 1; }
+tar xvzf hg19_hisat.tar.gz|| { echo "HISAT index untar+gunzip failed"; exit 1; }
 # Download hg19 iGenome
 curl -OL ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/UCSC/hg19/Homo_sapiens_UCSC_hg19.tar.gz
 tar xvzf Homo_sapiens_UCSC_hg19.tar.gz || { echo "iGenomes untar+gunzip failed"; exit 1; }
