@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
+WORK_DIR=/blast/rna
+
 set -e
 
-cd /blast
-mkdir -p work || { echo "cannot create work directory in /blast"; exit 1; }
-cd work
+cd WORK_DIR
 # Download HISAT
 curl -O http://www.ccb.jhu.edu/software/hisat/downloads/hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error downloading HISAT"; exit 1; }
 unzip hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error unzipping HISAT"; exit 1; }
