@@ -17,4 +17,5 @@ tar xvjf samtools-1.1.tar.bz2 || { echo "samtools untar+gunzip failed" ; exit 1;
 cd samtools-1.1
 sudo make || { echo 'samtools make failed'; exit 1; }
 # Download and install Bambino
+cd ..
 curl -OL https://cgwb.nci.nih.gov/cgi-bin/bambino?download_bambino_jar=bundle || { echo 'curl failed' ; exit 1; }
