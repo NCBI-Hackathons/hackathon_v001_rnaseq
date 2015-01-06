@@ -127,6 +127,9 @@ if __name__ == '__main__':
     parser.add_argument('--hisat-exe', type=str, required=False,
                             default='hisat',
                             help='path to HISAT executable')
+    parser.add_argument('--hisat-inspect-exe', type=str, required=False,
+                            default='hisat-inspect',
+                            help='path to HISAT inspect executable')
     parser.add_argument('--hisat-args', type=str, required=False,
                             default='',
                             help='supplementary arguments to pass to HISAT')
@@ -173,6 +176,14 @@ if __name__ == '__main__':
         atexit.register(shutil.rmtree, args.temp)
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
+        # Grab relevant refnames from hisat-inspect
+        valid_chrs = set(
+                subprocess.check_output(
+                    '{hisat_inspect} -n {hisat_idx}'.format(
+                    hisat_inspect=args.hisat_inspect_exe,
+                    hisat_idx=args.hisat_idx
+                )).split('\n')
+            )
         intron_dir = tempfile.mkdtemp(dir=args.temp)
         atexit.register(shutil.rmtree, intron_dir)
         intron_file = os.path.join(intron_dir, 'introns.tab')
@@ -182,7 +193,8 @@ if __name__ == '__main__':
                 for line in gtf_stream:
                     if line[0] == '#': continue
                     tokens = line.strip().split('\t')
-                    if tokens[2].lower() != 'exon': continue
+                    if (tokens[2].lower() != 'exon'
+                        or tokens[0] not in valid_chrs): continue
                     sign = tokens[6]
                     assert sign in ['+', '-']
                     '''key: transcript_id
@@ -203,10 +215,11 @@ if __name__ == '__main__':
                     attribute[id_index] = attribute[id_index].strip()
                     quote_index = attribute[id_index].index('"')
                     exons[attribute[id_index][quote_index+1:-1]].add(
-                            (tokens[0], int(tokens[3]), int(tokens[4]))
+                            (tokens[0], int(tokens[3]), int(tokens[4]), sign)
                         )
                 for transcript_id in exons:
-                    exons_from_transcript = sorted(list(exons[transcript_id]))
+                    exons_from_transcript = sorted(list(exons[transcript_id]),
+                                                    key=lambda x: x[:3])
                     # Recall that GTF is end-inclusive
                     for i in xrange(1, len(exons_from_transcript)):
                         if (exons_from_transcript[i][0] 
@@ -219,7 +232,7 @@ if __name__ == '__main__':
                                         exons_from_transcript[i][0],
                                         str(exons_from_transcript[i-1][2] + 1),
                                         str(exons_from_transcript[i][1] - 1),
-                                        sign
+                                        exons_from_transcript[i][3]
                                     ])
     try:
         pool = multiprocessing.Pool(args.num_processes, init_worker)
