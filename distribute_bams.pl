@@ -2,6 +2,7 @@
 
 use strict;
 use Digest::MD5 qw(md5 md5_hex md5_base64);
+use File::Temp;
 
 # File naming convention: sample-name.sample-group.original-name.bam
 # Possible command-line parameters:
@@ -51,12 +52,50 @@ if($bVerbose)
 	print "[$ts] Processing the sample '$strSampleName' (group: '$strSampleGroup')\n";
 }
 
-# Check if the BAM file is indexed.
-if(! -e "$strBAMfile.bai")
+# First, remove the PCR duplicates, low quality, unmapped and non-unique reads.
+if($bVerbose)
 {
-    my $strCMD = "samtools index $strBAMfile";
-    `$strCMD`;
+	my $ts = localtime;
+	print "[$ts] Removing the PCR duplicates, low quality, unmapped and non-unique reads\n";
 }
+my $hTempSAM = File::Temp->new(UNLINK => 1, SUFFIX => '.sam');
+my $strTempSAM = $hTempSAM->filename;
+my $strCMD = "samtools view -F 1540 -h $strTempSAM";
+open(CMD_OUT, "$strCMD |");
+while(my $strLine = <CMD_OUT>)
+{
+	chomp($strLine);
+	if(substr($strLine, 0, 1) eq '@')
+	{
+		print $hTempSAM "$strLine\n";
+		next;
+	}
+	if($strLine =~ m/NH:i:([0-9]+)/)
+	{
+		next unless($1==1);
+	}
+	else
+	{
+		print "ERROR: malformatted line: '$strLine'\n";
+		exit(0);
+	}
+	print $hTempSAM "$strLine\n"; 
+}
+close(CMD_OUT);
+
+# Sort and index the resulting filtered BAM file.
+my $strBAMsorted = $strBAMfile;
+$strBAMsorted =~ s/\.bam$/.sorted/;
+$strCMD = "samtools view -S -b $strTempSAM | samtools sort - $strBAMsorted";
+
+# Index the sorted BAM file.
+if($bVerbose)
+{
+	my $ts = localtime;
+	print "[$ts] Indexing the BAM file\n";
+}
+my $strCMD = "samtools index $strBAMsorted";
+`$strCMD`;
 
 # Distribute the jobs based on the chromosome. Extract the different chromosome names from
 # the BAM file first.
