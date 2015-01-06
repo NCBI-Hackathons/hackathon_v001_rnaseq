@@ -33,7 +33,7 @@ my $strOutputDir = shift(@ARGV);
 
 my $strSampleName = undef;
 my $strSampleGroup = undef;
-if($strBAMfile ~= m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
+if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
 {
 	$strSampleName = $1;
 	$strSampleGroup = $2;
@@ -49,6 +49,13 @@ if($bVerbose)
 {
 	my $ts = localtime;
 	print "[$ts] Processing the sample '$strSampleName' (group: '$strSampleGroup')\n";
+}
+
+# Check if the BAM file is indexed.
+if(! -e "$strBAMfile.bai")
+{
+    my $strCMD = "samtools index $strBAMfile";
+    `$strCMD`;
 }
 
 # Distribute the jobs based on the chromosome. Extract the different chromosome names from
@@ -69,7 +76,7 @@ if($bVerbose)
 {
 	my $ts = localtime;
 	my $nChromosomes = scalar @arrChromosomes;
-	print "[$ts]\tFound $nChromosomes different chromosome names\n";
+	print "[$ts] Found $nChromosomes different chromosome names\n";
 }
 
 # Separate the alignments by chromosome name
@@ -80,8 +87,7 @@ my $strFilename = pop(@tmp);
 
 foreach my $strChromosome (@arrChromosomes)
 {
-    my $strCMD = "samtools view -b $strBAMfile > $strOutputDir/${strChromosome}_$strFilename";
-    print "$strCMD\n";
+    my $strCMD = "samtools view -b $strBAMfile $strChromosome > $strOutputDir/${strChromosome}_$strFilename";
     `$strCMD`;
     push(@arrFiles, "$strOutputDir/${strChromosome}_$strFilename");
 }
