@@ -214,7 +214,7 @@ if __name__ == '__main__':
         for i, line in enumerate(manifest_stream):
             if line[0] == '#': continue
             sra_accession, sample_group, sample_name = line.strip().split('\t')
-            assert len(tokens) >= 3, (
+            assert len(line.split('\t')) >= 3, (
                     'line "{}" does not have at least 3 fields.'
                 ).format(line.strip())
             bam_filename = '.'.join(
