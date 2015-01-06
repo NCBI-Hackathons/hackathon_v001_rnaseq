@@ -54,12 +54,14 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                 sra_accession=sra_accession,
                 out=temp_dir
             )
+        print >>sys.stderr, 'pos1'
         exit_code = subprocess.Popen([fastq_dump_command], bufsize=-1).wait()
         if exit_code:
             return 'command "{}" exited with code {}.'.format(
                     fastq_dump_command, exit_code
                 )
         fastq_files = os.listdir(temp_dir)
+        print >>sys.stderr, 'pos2'
         if len(fastq_files) > 2:
             return (
                     'number of FASTQ files for SRA accession {} exceeds 2'
@@ -81,6 +83,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
             )
         align_command = ' | '.join([hisat_command, samtools_command])
         # Fail if any step in pipeline fails
+        print >>sys.stderr, 'pos3'
         exit_code = subprocess.Popen(' '.join(
                         ['set -exo pipefail;', align_command]
                     ),
