@@ -45,14 +45,15 @@ def init_worker():
     """
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
+def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                             fastq_dump_exe='fastq-dump', hisat_exe='hisat',
                             hisat_args='', samtools_exe='samtools',
-                            num_threads=4, intron_file=None):
+                            num_threads=4, intron_file=None,
+                            gzip_output=False):
     """ Uses fastq-dump to download sample FASTQ(s) and aligns data with HISAT.
 
         sra_accession: sample accession number on SRA
-        bam_filename: full path to BAM filename
+        out_filename: full path to output filename
         hisat_idx: full path to HISAT index basename
         temp_dir: temporary directory for storing downloaded fastqs
         fastq_dump_exe: path to fastq-dump executable
@@ -62,6 +63,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
         samtools_exe: path to SAMTools executable
         num_threads: argument of HISAT's -p parameter
         intron_file: intron file to pass to HISAT or None if not present
+        gzip_output: gzips sam output rather than converting to bam
 
         Return value: None if successful or error message if unsuccessful
     """
@@ -97,8 +99,10 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                         if len(fastq_files) == 2
                         else '-U {}'.format(fastq_files[0]))
             )
-        samtools_command = '{samtools_exe} view -bS - >{bam_filename}'.format(
-                samtools_exe=samtools_exe, bam_filename=bam_filename
+        if gzip_output:
+        pipe_command = 'gzip >{out_filename}'
+        pipe_command = '{samtools_exe} view -bS - >{out_filename}'.format(
+                samtools_exe=samtools_exe, out_filename=out_filename
             )
         align_command = ' | '.join([hisat_command, samtools_command])
         # Fail if any step in pipeline fails
@@ -144,6 +148,10 @@ if __name__ == '__main__':
     parser.add_argument('--samtools-exe', type=str, required=False,
                             default='samtools',
                             help='path to SAMTools executable')
+    parser.add_argument('--gzip-output', action='store_const', const=True,
+                            default=False,
+                            help=('gzips sam output of hisat; does not use '
+                                  'samtools'))
     parser.add_argument('--out', type=str, required=False,
                             default='./',
                             help='output directory')
@@ -250,19 +258,25 @@ if __name__ == '__main__':
                 assert len(line.split('\t')) >= 3, (
                         'line "{}" does not have at least 3 fields.'
                     ).format(line.strip())
-                bam_filename = '.'.join(
-                        [sample_name, sample_group, sra_accession, 'bam']
-                    )
+                if args.gzip_output:
+                    out_filename = [sample_name,
+                            sample_group, sra_accession, 'sam', 'gz'
+                        ]
+                else:
+                    out_filename = '.'.join(
+                            [sample_name, sample_group, sra_accession, 'bam']
+                        )
                 temp_dir = tempfile.mkdtemp(dir=args.temp)
                 # Ensure that temporary directory is killed on SIGINT/SIGTERM
                 atexit.register(shutil.rmtree, temp_dir)
                 pool.apply_async(download_and_align_data,
                                 args=(sra_accession,
-                                        os.path.join(args.out, bam_filename),
+                                        os.path.join(args.out, out_filename),
                                         args.hisat_idx, temp_dir,
                                         args.fastq_dump_exe, args.hisat_exe,
                                         args.hisat_args, args.samtools_exe,
-                                        args.num_threads, intron_file),
+                                        args.num_threads, intron_file,
+                                        args.gzip_output),
                                 callback=return_values.append
                             )
                 sample_count += 1
