@@ -186,7 +186,7 @@ if __name__ == '__main__':
                             if (exons_from_transcript[i][1] 
                                 - exons_from_transcript[i-1][2] < 5):
                                 continue
-                            print '\t'.join([
+                            print >>intron_stream, '\t'.join([
                                         exons_from_transcript[i][0],
                                         str(exons_from_transcript[i-1][2] + 1),
                                         str(exons_from_transcript[i][1] - 1)
