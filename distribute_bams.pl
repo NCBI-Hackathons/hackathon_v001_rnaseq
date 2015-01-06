@@ -14,11 +14,11 @@ if($nParams<2)
 	exit(0);
 }
 
-my $bVerbose = =;
+my $bVerbose = 0;
 if($ARGV[0] eq '-v')
 {
 	$bVerbose = 1;
-	unshift(@ARGV);
+	shift(@ARGV);
 }
 
 $nParams = scalar @ARGV;
@@ -28,17 +28,10 @@ if($nParams<2)
 	exit(0);
 }
 
-my $strBAMfile = unshift(@ARGV);
-my $strOutputDir = unshift(@ARGV);
+my $strBAMfile = shift(@ARGV);
+my $strOutputDir = shift(@ARGV);
 
-my $strSampleName = undef;
-my $strSampleGroup = undef;
-
-if($strBAMfile ~= m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
-{
-	$strSampleName = $1;
-	$strSampleGroup = $2;
-}
+my ($strSampleName, $strSampleGroup) = $strBAMfile ~= m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/;
 
 if($bVerbose)
 {
@@ -49,7 +42,7 @@ if($bVerbose)
 # Distribute the jobs based on the chromosome. Extract the different chromosome names from
 # the BAM file first.
 my %hmChromosomes = ();
-my $strCMD = "samtools view $strBAMfile | cut -f3 | sort | uniq ";
+my $strCMD = "samtools view $strBAMfile | cut -f3 | sort -u";
 open(CMD_IN, "$strCMD |");
 while(my $strLine = <CMD_IN>)
 {
@@ -70,14 +63,15 @@ if($bVerbose)
 # Separate the alignments by chromosome name
 my @arrFiles = ();
 my @tmp = split(/\//, $strBAMfile);
-my $strFilename = unshift(@tmp);
-my $strCMDtemplate = "samtools view -b $strBAMfile > $strOutputDir/<CHR>_$strFilename";
+my $strFilename = pop(@tmp);
+
+
 foreach my $strChromosome (@arrChromosomes)
 {
-	my $strCMD = $strCMDtemplate;
-	$strCMD =~ s/<CHR>/$strChromosome/;
-	`$strCMD`;
-	push(@arrFiles, "$strOutputDir/$strChromosome"."_$strFilename");
+    my $strCMD = "samtools view -b $strBAMfile > $strOutputDir/${strChromosome}_$strFilename";
+    print "$strCMD\n";
+    `$strCMD`;
+    push(@arrFiles, "$strOutputDir/${strChromosome}_$strFilename");
 }
 
 # We limit the number of worker threads to 16, therefore, simply take the first symbol of
