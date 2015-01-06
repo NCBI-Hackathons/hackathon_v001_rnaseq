@@ -93,7 +93,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                         if len(fastq_files) == 2
                         else '-U {}'.format(fastq_files[0]))
             )
-        samtools_command = '{samtools_exe} view -bS >{bam_filename}'.format(
+        samtools_command = '{samtools_exe} view -bS - >{bam_filename}'.format(
                 samtools_exe=samtools_exe, bam_filename=bam_filename
             )
         align_command = ' | '.join([hisat_command, samtools_command])
