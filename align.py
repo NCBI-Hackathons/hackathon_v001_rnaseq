@@ -159,6 +159,12 @@ if __name__ == '__main__':
         # Already exists?
         print >>sys.stderr, ('warning: could not create output directory; '
                              'it may already exist')
+    try:
+        os.makedirs(args.temp)
+    except OSError:
+        # Already exists?
+        print >>sys.stderr, ('warning: could not create temporary directory; '
+                             'it may already exist')
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
         intron_dir = tempfile.mkdtemp(dir=args.temp)
