@@ -25,6 +25,7 @@ import shutil
 import sys
 import time
 from collections import defaultdict
+import signal
 
 def init_worker():
     """ Prevents KeyboardInterrupt from reaching a pool's workers.
