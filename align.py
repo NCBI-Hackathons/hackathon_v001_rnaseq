@@ -216,6 +216,7 @@ if __name__ == '__main__':
                                 callback=return_values.append
                             )
             sample_count += 1
+        pool.close()
         while len(return_values) < sample_count:
             errors = [return_value for return_value in return_values
                         if return_value is not None]
