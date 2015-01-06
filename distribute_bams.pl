@@ -60,7 +60,9 @@ if($bVerbose)
 }
 my $hTempSAM = File::Temp->new(UNLINK => 1, SUFFIX => '.sam');
 my $strTempSAM = $hTempSAM->filename;
-my $strCMD = "samtools view -F 1540 -h $strTempSAM";
+my $strCMD = "samtools view -F 1540 -h $strBAMfile";
+my $nFiltered = 0;
+my $nReads = 0;
 open(CMD_OUT, "$strCMD |");
 while(my $strLine = <CMD_OUT>)
 {
@@ -70,23 +72,38 @@ while(my $strLine = <CMD_OUT>)
 		print $hTempSAM "$strLine\n";
 		next;
 	}
+	$nReads++;
 	if($strLine =~ m/NH:i:([0-9]+)/)
 	{
-		next unless($1==1);
+		if($1!=1)
+		{
+			$nFiltered++;
+			next;
+		}
 	}
 	else
 	{
-		print "ERROR: malformatted line: '$strLine'\n";
+		print "ERROR: malformatted line: '$strLine'. This is not a crush, but a controlled program termination\n";
 		exit(0);
 	}
 	print $hTempSAM "$strLine\n"; 
 }
 close(CMD_OUT);
+if($bVerbose)
+{
+	my $ts = localtime;
+	print "\t[$ts] Processed $nReads reads. Removed $nFiltered non-uniquely mapped\n";
+}
 
 # Sort and index the resulting filtered BAM file.
 my $strBAMsorted = $strBAMfile;
 $strBAMsorted =~ s/\.bam$/.sorted/;
-$strCMD = "samtools view -S -b $strTempSAM | samtools sort - $strBAMsorted";
+$strCMD = "samtools view -S -b $strTempSAM > $strBAMsorted";
+`$strCMD`;
+$strCMD ="samtools sort $strBAMsorted $strBAMsorted";
+`$strCMD`;
+$strCMD = "rm $strBAMsorted";
+`$strCMD`;
 
 # Index the sorted BAM file.
 if($bVerbose)
@@ -94,13 +111,13 @@ if($bVerbose)
 	my $ts = localtime;
 	print "[$ts] Indexing the BAM file\n";
 }
-my $strCMD = "samtools index $strBAMsorted";
+my $strCMD = "samtools index $strBAMsorted.bam";
 `$strCMD`;
 
 # Distribute the jobs based on the chromosome. Extract the different chromosome names from
 # the BAM file first.
 my %hmChromosomes = ();
-my $strCMD = "samtools view $strBAMfile | cut -f3 | sort -u";
+my $strCMD = "samtools view $strBAMsorted.bam | cut -f3 | sort -u";
 open(CMD_IN, "$strCMD |");
 while(my $strLine = <CMD_IN>)
 {
@@ -123,16 +140,9 @@ my @arrFiles = ();
 my @tmp = split(/\//, $strBAMfile);
 my $strFilename = pop(@tmp);
 
-
 foreach my $strChromosome (@arrChromosomes)
 {
-    my $strCMD = "samtools view -b $strBAMfile $strChromosome > $strOutputDir/${strChromosome}_$strFilename";
+    my $strCMD = "samtools view -b -h $strBAMsorted.bam $strChromosome > $strOutputDir/${strChromosome}_$strFilename";
     `$strCMD`;
     push(@arrFiles, "$strOutputDir/${strChromosome}_$strFilename");
 }
-
-# We limit the number of worker threads to 16, therefore, simply take the first symbol of
-# the hash.
-my $strHash = md5("$strSampleName.$strSampleGroup");
-my $strWorkerID = substr($strHash, 0, 1);
-
