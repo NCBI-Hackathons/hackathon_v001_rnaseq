@@ -54,7 +54,8 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                 sra_accession=sra_accession,
                 out=temp_dir
             )
-        exit_code = subprocess.Popen([fastq_dump_command], bufsize=-1).wait()
+        exit_code = subprocess.Popen(fastq_dump_command, bufsize=-1,
+                                        shell=True).wait()
         if exit_code:
             return 'command "{}" exited with code {}.'.format(
                     fastq_dump_command, exit_code
