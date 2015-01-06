@@ -236,7 +236,8 @@ if __name__ == '__main__':
             # Ensure that temporary directory is killed on SIGINT/SIGTERM
             atexit.register(shutil.rmtree, temp_dir)
             pool.apply_async(download_and_align_data,
-                                args=(sra_accession, bam_filename,
+                                args=(sra_accession,
+                                        os.path.join(args.out, bam_filename),
                                         args.hisat_idx, temp_dir,
                                         args.fastq_dump_exe, args.hisat_exe,
                                         args.hisat_args, args.samtools_exe,
