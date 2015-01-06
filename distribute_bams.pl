@@ -31,7 +31,19 @@ if($nParams<2)
 my $strBAMfile = shift(@ARGV);
 my $strOutputDir = shift(@ARGV);
 
-my ($strSampleName, $strSampleGroup) = $strBAMfile ~= m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/;
+my $strSampleName = undef;
+my $strSampleGroup = undef;
+if($strBAMfile ~= m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
+{
+	$strSampleName = $1;
+	$strSampleGroup = $2;
+}
+
+if(!$strSampleName || !$strSampleGroup)
+{
+	print "ERROR: the filename must follow the pattern: sample-name.sample-group.original-name.bam\n";
+	exit(0);
+}
 
 if($bVerbose)
 {
