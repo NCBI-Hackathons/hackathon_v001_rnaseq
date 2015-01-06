@@ -60,6 +60,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
             return 'command "{}" exited with code {}.'.format(
                     fastq_dump_command, exit_code
                 )
+        print >>sys.stderr, 'pos1a'
         fastq_files = os.listdir(temp_dir)
         print >>sys.stderr, 'pos2'
         if len(fastq_files) > 2:
@@ -219,18 +220,18 @@ if __name__ == '__main__':
                                 callback=return_values.append
                             )
             sample_count += 1
-        pool.close()
-        while len(return_values) < sample_count:
-            errors = [return_value for return_value in return_values
-                        if return_value is not None]
-            if errors:
-                raise RuntimeError('\n'.join(errors))
-            sys.stdout.write(
-                    'downloaded and aligned {}/{} datasets.\r'.format(
-                            len(return_values), sample_count
-                        )
-                )
-            time.sleep(0.2)
-        print 'downloaded and aligned {} datasets in {} s.'.format(
-                sample_count, time.time() - start_time
+    pool.close()
+    while len(return_values) < sample_count:
+        errors = [return_value for return_value in return_values
+                    if return_value is not None]
+        if errors:
+            raise RuntimeError('\n'.join(errors))
+        sys.stdout.write(
+                'downloaded and aligned {}/{} datasets.\r'.format(
+                        len(return_values), sample_count
+                    )
             )
+        time.sleep(0.2)
+    print 'downloaded and aligned {} datasets in {} s.'.format(
+            sample_count, time.time() - start_time
+        )
