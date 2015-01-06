@@ -18,8 +18,10 @@ WARNING: fastq-dump creates cache directory in home directory, so use
 vdb-config to change its location if home directory is on partition without
 much space
 
-Recommended: add --mm to hisat command-line parameters so index is shared
-among instances when that's no longer buggy.
+Warnings: 1) index is not shared among hisat instances running in parallel;
+--mm would permit this, but it appears to be buggy right now.
+2) conversion to bam with samtools may fail because validation stringency
+is strict; if that happens, use --gzip-output instead
 
 Dependencies: HISAT, fastq-dump from sra-toolkit, samtools
 """
@@ -247,8 +249,8 @@ if __name__ == '__main__':
                                         str(exons_from_transcript[i][1] - 1),
                                         exons_from_transcript[i][3]
                                     ])
+    pool = multiprocessing.Pool(args.num_processes, init_worker)
     try:
-        pool = multiprocessing.Pool(args.num_processes, init_worker)
         with open(args.manifest) as manifest_stream:
             sample_count = 0
             return_values = []
@@ -298,6 +300,5 @@ if __name__ == '__main__':
                 sample_count, time.time() - start_time
             )
     except (KeyboardInterrupt, SystemExit):
-        if 'pool' in globals():
-            pool.terminate()
-            pool.join()
+        pool.terminate()
+        pool.join()
