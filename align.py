@@ -182,7 +182,7 @@ if __name__ == '__main__':
                     '{hisat_inspect} -n {hisat_idx}'.format(
                     hisat_inspect=args.hisat_inspect_exe,
                     hisat_idx=args.hisat_idx
-                )).split('\n')
+                ), shell=True).split('\n')
             )
         intron_dir = tempfile.mkdtemp(dir=args.temp)
         atexit.register(shutil.rmtree, intron_dir)
