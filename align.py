@@ -154,8 +154,7 @@ if __name__ == '__main__':
                     if line[0] == '#': continue
                     tokens = line.strip().split('\t')
                     if tokens[2].lower() != 'exon': continue
-                    print tokens
-                    sign = tokens[5]
+                    sign = tokens[6]
                     assert sign in ['+', '-']
                     '''key: transcript_id
                        value: (rname, exon start (1-based), exon end (1-based))
