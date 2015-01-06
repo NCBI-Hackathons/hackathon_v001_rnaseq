@@ -182,6 +182,10 @@ if __name__ == '__main__':
                             )
             sample_count += 1
         while len(return_values) < sample_count:
+            errors = [return_value for return_value in return_values
+                        if return_value is not None]
+            if errors:
+                raise RuntimeError('\n'.join(errors))
             sys.stdout.write(
                     'downloaded and aligned {}/{} datasets.\r'.format(
                             len(return_values), sample_count
