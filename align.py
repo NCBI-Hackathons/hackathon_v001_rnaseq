@@ -178,14 +178,15 @@ if __name__ == '__main__':
         # Already exists?
         print >>sys.stderr, ('warning: could not create output directory; '
                              'it may already exist')
-    try:
-        os.makedirs(args.temp)
-    except OSError:
-        # Already exists?
-        print >>sys.stderr, ('warning: could not create temporary directory; '
-                             'it may already exist')
-    else:
-        atexit.register(shutil.rmtree, args.temp)
+    if args.temp is not None:
+        try:
+            os.makedirs(args.temp)
+        except OSError:
+            # Already exists?
+            print >>sys.stderr, ('warning: could not create temporary '
+                                 'directory; it may already exist')
+        else:
+            atexit.register(shutil.rmtree, args.temp)
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
         # Grab relevant refnames from hisat-inspect
