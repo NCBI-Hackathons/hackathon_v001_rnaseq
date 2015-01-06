@@ -76,7 +76,8 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
             return 'command "{}" exited with code {}.'.format(
                     fastq_dump_command, exit_code
                 )
-        fastq_files = sorted(os.listdir(temp_dir))
+        fastq_files = [os.path.join(temp_dir, filename)
+                        for filename in sorted(os.listdir(temp_dir))]
         if len(fastq_files) > 2:
             return (
                     'number of FASTQ files for SRA accession {} exceeds 2'
