@@ -148,7 +148,7 @@ if __name__ == '__main__':
                              'it may already exist')
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
-        intron_dir = tempfile.mkdtemp(args.temp)
+        intron_dir = tempfile.mkdtemp(dir=args.temp)
         atexit.register(shutil.rmtree, intron_dir)
         intron_file = os.path.join(intron_dir, 'introns.tab')
         with open(intron_file, 'w') as intron_stream:
@@ -208,7 +208,7 @@ if __name__ == '__main__':
             bam_filename = '.'.join(
                     [sample_name, sample_group, sra_accession, 'bam']
                 )
-            temp_dir = tempfile.mkdtemp(args.temp)
+            temp_dir = tempfile.mkdtemp(dir=args.temp)
             # Ensure that temporary directory is killed on SIGINT/SIGTERM
             atexit.register(shutil.rmtree, temp_dir)
             pool.apply_async(download_and_align_data,
