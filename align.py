@@ -139,6 +139,12 @@ if __name__ == '__main__':
                             help=('number of cores allocated to each HISAT '
                                   'instance'))
     args = parser.parse_args()
+    try:
+        os.makedirs(args.out)
+    except OSError:
+        # Already exists?
+        print >>sys.stderr, ('warning: could not create output directory; '
+                             'it may already exist')
     if args.gtf is not None:
         if args.extract is None:
             raise RuntimeError(
