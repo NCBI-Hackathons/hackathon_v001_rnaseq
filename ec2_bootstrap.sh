@@ -19,6 +19,7 @@ curl -OL http://downloads.sourceforge.net/project/samtools/samtools/1.1/samtools
 tar xvjf samtools-1.1.tar.bz2 || { echo "samtools untar+gunzip failed" ; exit 1; }
 cd samtools-1.1
 sudo make || { echo 'samtools make failed'; exit 1; }
+cd ..
 # Download HISAT index
 curl -OL ftp://ftp.ccb.jhu.edu/pub/data/hisat_indexes/hg19_hisat.tar.gz || { echo 'error downloading UCSC hg19 HISAT index'; exit 1; }
 tar xvzf hg19_hisat.tar.gz|| { echo "HISAT index untar+gunzip failed"; exit 1; }
