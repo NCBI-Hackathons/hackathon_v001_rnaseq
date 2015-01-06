@@ -100,10 +100,11 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                         else '-U {}'.format(fastq_files[0]))
             )
         if gzip_output:
-        pipe_command = 'gzip >{out_filename}'
-        pipe_command = '{samtools_exe} view -bS - >{out_filename}'.format(
-                samtools_exe=samtools_exe, out_filename=out_filename
-            )
+            pipe_command = 'gzip >{out_filename}'
+        else:
+            pipe_command = '{samtools_exe} view -bS - >{out_filename}'.format(
+                    samtools_exe=samtools_exe, out_filename=out_filename
+                )
         align_command = ' | '.join([hisat_command, samtools_command])
         # Fail if any step in pipeline fails
         exit_code = subprocess.Popen(' '.join(
