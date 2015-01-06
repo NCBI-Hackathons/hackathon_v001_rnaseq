@@ -136,6 +136,9 @@ if __name__ == '__main__':
                             default=4,
                             help=('number of cores allocated to each HISAT '
                                   'instance'))
+    parser.add_argument('--temp', type=str, required=False,
+                            default=None,
+                            help=('where to store temporary files'))
     args = parser.parse_args()
     try:
         os.makedirs(args.out)
@@ -145,7 +148,7 @@ if __name__ == '__main__':
                              'it may already exist')
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
-        intron_dir = tempfile.mkdtemp()
+        intron_dir = tempfile.mkdtemp(args.temp)
         atexit.register(shutil.rmtree, intron_dir)
         intron_file = os.path.join(intron_dir, 'introns.tab')
         with open(intron_file, 'w') as intron_stream:
@@ -205,7 +208,7 @@ if __name__ == '__main__':
             bam_filename = '.'.join(
                     [sample_name, sample_group, sra_accession, 'bam']
                 )
-            temp_dir = tempfile.mkdtemp()
+            temp_dir = tempfile.mkdtemp(args.temp)
             # Ensure that temporary directory is killed on SIGINT/SIGTERM
             atexit.register(shutil.rmtree, temp_dir)
             pool.apply_async(download_and_align_data,
