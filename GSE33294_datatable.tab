@@ -1,36 +1,36 @@
-SRR975551	T	primary colorectal cancer AMC_2-1	GSM1228184
-SRR975552	T	primary colorectal cancer AMC_3-1	GSM1228185
-SRR975553	T	primary colorectal cancer AMC_5-1	GSM1228186
-SRR975554	T	primary colorectal cancer AMC_6-1	GSM1228187
-SRR975555	T	primary colorectal cancer AMC_7-1	GSM1228188
-SRR975556	T	primary colorectal cancer AMC_8-1	GSM1228189
-SRR975557	T	primary colorectal cancer AMC_9-1	GSM1228190
-SRR975558	T	primary colorectal cancer AMC_10-1	GSM1228191
-SRR975559	T	primary colorectal cancer AMC_12-1	GSM1228192
-SRR975560	T	primary colorectal cancer AMC_13-1	GSM1228193
-SRR975561	T	primary colorectal cancer AMC_17-1	GSM1228194
-SRR975562	T	primary colorectal cancer AMC_18-1	GSM1228195
-SRR975563	T	primary colorectal cancer AMC_19-1	GSM1228196
-SRR975564	T	primary colorectal cancer AMC_20-1	GSM1228197
-SRR975565	T	primary colorectal cancer AMC_21-1	GSM1228198
-SRR975566	T	primary colorectal cancer AMC_22-1	GSM1228199
-SRR975567	T	primary colorectal cancer AMC_23-1	GSM1228200
-SRR975568	T	primary colorectal cancer AMC_24-1	GSM1228201
-SRR975569	N	normal colon AMC_2-2	  GSM1228202
-SRR975570	N	normal colon AMC_3-2	  GSM1228203
-SRR975571	N	normal colon AMC_5-2	  GSM1228204
-SRR975572	N	normal colon AMC_6-2	  GSM1228205
-SRR975573	N	normal colon AMC_7-2	  GSM1228206
-SRR975574	N	normal colon AMC_8-2	  GSM1228207
-SRR975575	N	normal colon AMC_9-2	  GSM1228208
-SRR975576	N	normal colon AMC_10-2	  GSM1228209
-SRR975577	N	normal colon AMC_12-2	  GSM1228210
-SRR975578	N	normal colon AMC_13-2	  GSM1228211
-SRR975579	N	normal colon AMC_17-2	  GSM1228212
-SRR975580	N	normal colon AMC_18-2	  GSM1228213
-SRR975581	N	normal colon AMC_19-2	  GSM1228214
-SRR975582	N	normal colon AMC_20-2	  GSM1228215
-SRR975583	N	normal colon AMC_21-2	  GSM1228216
-SRR975584	N	normal colon AMC_22-2	  GSM1228217
-SRR975585	N	normal colon AMC_23-2	  GSM1228218
-SRR975586	N	normal colon AMC_24-2	  GSM1228219
+SRR975551	T	primary colorectal cancer AMC_2	GSM1228184
+SRR975552	T	primary colorectal cancer AMC_3	GSM1228185
+SRR975553	T	primary colorectal cancer AMC_5	GSM1228186
+SRR975554	T	primary colorectal cancer AMC_6	GSM1228187
+SRR975555	T	primary colorectal cancer AMC_7	GSM1228188
+SRR975556	T	primary colorectal cancer AMC_8	GSM1228189
+SRR975557	T	primary colorectal cancer AMC_9	GSM1228190
+SRR975558	T	primary colorectal cancer AMC_10	GSM1228191
+SRR975559	T	primary colorectal cancer AMC_12	GSM1228192
+SRR975560	T	primary colorectal cancer AMC_13	GSM1228193
+SRR975561	T	primary colorectal cancer AMC_17	GSM1228194
+SRR975562	T	primary colorectal cancer AMC_18	GSM1228195
+SRR975563	T	primary colorectal cancer AMC_19	GSM1228196
+SRR975564	T	primary colorectal cancer AMC_20	GSM1228197
+SRR975565	T	primary colorectal cancer AMC_21	GSM1228198
+SRR975566	T	primary colorectal cancer AMC_22	GSM1228199
+SRR975567	T	primary colorectal cancer AMC_23	GSM1228200
+SRR975568	T	primary colorectal cancer AMC_24	GSM1228201
+SRR975569	N	normal colon AMC_2	  GSM1228202
+SRR975570	N	normal colon AMC_3	  GSM1228203
+SRR975571	N	normal colon AMC_5	  GSM1228204
+SRR975572	N	normal colon AMC_6	  GSM1228205
+SRR975573	N	normal colon AMC_7	  GSM1228206
+SRR975574	N	normal colon AMC_8	  GSM1228207
+SRR975575	N	normal colon AMC_9	  GSM1228208
+SRR975576	N	normal colon AMC_10	  GSM1228209
+SRR975577	N	normal colon AMC_12	  GSM1228210
+SRR975578	N	normal colon AMC_13	  GSM1228211
+SRR975579	N	normal colon AMC_17	  GSM1228212
+SRR975580	N	normal colon AMC_18	  GSM1228213
+SRR975581	N	normal colon AMC_19	  GSM1228214
+SRR975582	N	normal colon AMC_20	  GSM1228215
+SRR975583	N	normal colon AMC_21	  GSM1228216
+SRR975584	N	normal colon AMC_22	  GSM1228217
+SRR975585	N	normal colon AMC_23	  GSM1228218
+SRR975586	N	normal colon AMC_24	  GSM1228219
