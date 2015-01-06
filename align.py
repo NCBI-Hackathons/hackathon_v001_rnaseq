@@ -18,6 +18,9 @@ WARNING: fastq-dump creates cache directory in home directory, so use
 vdb-config to change its location if home directory is on partition without
 much space
 
+Recommended: add --mm to hisat command-line parameters so index is shared
+among instances when that's no longer buggy.
+
 Dependencies: HISAT, fastq-dump from sra-toolkit, samtools
 """
 import multiprocessing
@@ -83,7 +86,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                     'number of FASTQ files for SRA accession {} exceeds 2'
                 ).format(sra_accession)
         hisat_command = (
-                '{hisat_exe} --mm -x {hisat_idx} -p {num_threads} '
+                '{hisat_exe} -x {hisat_idx} -p {num_threads} '
                 '{data} {intron_file} {hisat_args}'
             ).format(
                 hisat_exe=hisat_exe, hisat_idx=hisat_idx,
