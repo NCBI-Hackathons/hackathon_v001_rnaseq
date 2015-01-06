@@ -70,7 +70,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                 hisat_exe=hisat_exe, hisat_idx=hisat_idx,
                 num_threads=num_threads, hisat_args=hisat_args,
                 intron_file=('--known-splicesite-infile {}'.format(intron_file)
-                                if intron_file is not None else '')
+                                if intron_file is not None else ''),
                 data=('-1 {} -2 {}'.format(*fastq_files)
                         if len(fastq_files) == 2
                         else '-U {}'.format(fastq_files[0]))
