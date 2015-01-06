@@ -228,5 +228,5 @@ if __name__ == '__main__':
                 )
             time.sleep(0.2)
         print 'downloaded and aligned {} datasets in {} s.'.format(
-                time.time() - start_time
+                sample_count, time.time() - start_time
             )
