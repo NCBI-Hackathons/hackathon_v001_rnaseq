@@ -186,7 +186,7 @@ if __name__ == '__main__':
             print >>sys.stderr, ('warning: could not create temporary '
                                  'directory; it may already exist')
         else:
-            atexit.register(shutil.rmtree, args.temp)
+            atexit.register(shutil.rmtree, args.temp, ignore_errors=True)
     if args.gtf is not None:
         print 'harvesting introns from GTF file...'
         # Grab relevant refnames from hisat-inspect
@@ -198,7 +198,7 @@ if __name__ == '__main__':
                 ), shell=True).split('\n')
             )
         intron_dir = tempfile.mkdtemp(dir=args.temp)
-        atexit.register(shutil.rmtree, intron_dir)
+        atexit.register(shutil.rmtree, intron_dir, ignore_errors=True)
         intron_file = os.path.join(intron_dir, 'introns.tab')
         with open(intron_file, 'w') as intron_stream:
             with open(args.gtf) as gtf_stream:
@@ -270,7 +270,7 @@ if __name__ == '__main__':
                         )
                 temp_dir = tempfile.mkdtemp(dir=args.temp)
                 # Ensure that temporary directory is killed on SIGINT/SIGTERM
-                atexit.register(shutil.rmtree, temp_dir)
+                atexit.register(shutil.rmtree, temp_dir, ignore_errors=True)
                 pool.apply_async(download_and_align_data,
                                 args=(sra_accession,
                                         os.path.join(args.out, out_filename),
@@ -298,6 +298,6 @@ if __name__ == '__main__':
                 sample_count, time.time() - start_time
             )
     except (KeyboardInterrupt, SystemExit):
-        if 'pool' in locals():
+        if 'pool' in globals():
             pool.terminate()
             pool.join()
