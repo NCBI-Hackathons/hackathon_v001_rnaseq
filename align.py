@@ -59,7 +59,6 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
         Return value: None if successful or error message if unsuccessful
     """
     try:
-        print >>sys.stderr, fastq_dump_command
         fastq_dump_command = (
                 '{fastq_dump_exe} -I --split-files {sra_accession} -O {out}'
             ).format(
@@ -67,6 +66,7 @@ def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                 sra_accession=sra_accession,
                 out=temp_dir
             )
+        print >>sys.stderr, fastq_dump_command
         exit_code = subprocess.Popen(fastq_dump_command, bufsize=-1,
                                         shell=True).wait()
         if exit_code:
