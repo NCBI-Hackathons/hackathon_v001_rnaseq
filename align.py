@@ -218,7 +218,8 @@ if __name__ == '__main__':
                             print >>intron_stream, '\t'.join([
                                         exons_from_transcript[i][0],
                                         str(exons_from_transcript[i-1][2] + 1),
-                                        str(exons_from_transcript[i][1] - 1)
+                                        str(exons_from_transcript[i][1] - 1),
+                                        sign
                                     ])
     pool = multiprocessing.Pool(args.num_processes, init_worker)
     with open(args.manifest) as manifest_stream:
