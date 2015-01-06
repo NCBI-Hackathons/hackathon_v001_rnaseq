@@ -105,7 +105,7 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
             pipe_command = '{samtools_exe} view -bS - >{out_filename}'.format(
                     samtools_exe=samtools_exe, out_filename=out_filename
                 )
-        align_command = ' | '.join([hisat_command, samtools_command])
+        align_command = ' | '.join([hisat_command, pipe_command])
         # Fail if any step in pipeline fails
         exit_code = subprocess.Popen(' '.join(
                         ['set -exo pipefail;', align_command]
