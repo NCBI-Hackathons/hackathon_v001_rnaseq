@@ -26,6 +26,17 @@ import sys
 import time
 from collections import defaultdict
 
+def init_worker():
+    """ Prevents KeyboardInterrupt from reaching a pool's workers.
+
+        Exiting gracefully after KeyboardInterrupt or SystemExit is a
+        challenge. The solution implemented here is by John Reese and is from
+        http://noswap.com/blog/python-multiprocessing-keyboardinterrupt .
+
+        No return value.
+    """
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
 def download_and_align_data(sra_accession, bam_filename, hisat_idx, temp_dir,
                             fastq_dump_exe='fastq-dump', hisat_exe='hisat',
                             hisat_args='', samtools_exe='samtools',
@@ -195,7 +206,7 @@ if __name__ == '__main__':
                                         str(exons_from_transcript[i-1][2] + 1),
                                         str(exons_from_transcript[i][1] - 1)
                                     ])
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(num_processes, init_worker)
     with open(args.manifest) as manifest_stream:
         sample_count = 0
         return_values = []
