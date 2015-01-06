@@ -221,23 +221,26 @@ if __name__ == '__main__':
                                         str(exons_from_transcript[i][1] - 1),
                                         sign
                                     ])
-    pool = multiprocessing.Pool(args.num_processes, init_worker)
-    with open(args.manifest) as manifest_stream:
-        sample_count = 0
-        return_values = []
-        for i, line in enumerate(manifest_stream):
-            if line[0] == '#': continue
-            sra_accession, sample_group, sample_name = line.strip().split('\t')
-            assert len(line.split('\t')) >= 3, (
-                    'line "{}" does not have at least 3 fields.'
-                ).format(line.strip())
-            bam_filename = '.'.join(
-                    [sample_name, sample_group, sra_accession, 'bam']
-                )
-            temp_dir = tempfile.mkdtemp(dir=args.temp)
-            # Ensure that temporary directory is killed on SIGINT/SIGTERM
-            atexit.register(shutil.rmtree, temp_dir)
-            pool.apply_async(download_and_align_data,
+    try:
+        pool = multiprocessing.Pool(args.num_processes, init_worker)
+        with open(args.manifest) as manifest_stream:
+            sample_count = 0
+            return_values = []
+            for i, line in enumerate(manifest_stream):
+                if line[0] == '#': continue
+                sra_accession, sample_group, sample_name = (
+                        line.strip().split('\t')
+                    )
+                assert len(line.split('\t')) >= 3, (
+                        'line "{}" does not have at least 3 fields.'
+                    ).format(line.strip())
+                bam_filename = '.'.join(
+                        [sample_name, sample_group, sra_accession, 'bam']
+                    )
+                temp_dir = tempfile.mkdtemp(dir=args.temp)
+                # Ensure that temporary directory is killed on SIGINT/SIGTERM
+                atexit.register(shutil.rmtree, temp_dir)
+                pool.apply_async(download_and_align_data,
                                 args=(sra_accession,
                                         os.path.join(args.out, bam_filename),
                                         args.hisat_idx, temp_dir,
@@ -246,19 +249,23 @@ if __name__ == '__main__':
                                         args.num_threads, intron_file),
                                 callback=return_values.append
                             )
-            sample_count += 1
-    pool.close()
-    while len(return_values) < sample_count:
-        errors = [return_value for return_value in return_values
-                    if return_value is not None]
-        if errors:
-            raise RuntimeError('\n'.join(errors))
-        sys.stdout.write(
-                'downloaded and aligned {}/{} datasets.\r'.format(
-                        len(return_values), sample_count
-                    )
+                sample_count += 1
+        pool.close()
+        while len(return_values) < sample_count:
+            errors = [return_value for return_value in return_values
+                        if return_value is not None]
+            if errors:
+                raise RuntimeError('\n'.join(errors))
+            sys.stdout.write(
+                    'downloaded and aligned {}/{} datasets.\r'.format(
+                            len(return_values), sample_count
+                        )
+                )
+            time.sleep(0.2)
+        print 'downloaded and aligned {} datasets in {} s.'.format(
+                sample_count, time.time() - start_time
             )
-        time.sleep(0.2)
-    print 'downloaded and aligned {} datasets in {} s.'.format(
-            sample_count, time.time() - start_time
-        )
+    except (KeyboardInterrupt, SystemExit):
+        if 'pool' in locals():
+            pool.terminate()
+            pool.join()
