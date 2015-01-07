@@ -1,0 +1,49 @@
+warning: could not create output directory; it may already exist
+warning: could not create temporary directory; it may already exist
++ gzip
++ hisat -x ../hg19_hisat/hg19_hisat -p 4 -U ../temp/tmpS9sIot/SRR358997_1.fastq --known-splicesite-infile ../temp/tmpaRXzeX/introns.tab --trim3 10
++ gzip
++ hisat -x ../hg19_hisat/hg19_hisat -p 4 -U ../temp/tmp_cHHkd/SRR358996_1.fastq --known-splicesite-infile ../temp/tmpaRXzeX/introns.tab --trim3 10
++ gzip
++ hisat -x ../hg19_hisat/hg19_hisat -p 4 -U ../temp/tmpoxXb_W/SRR358994_1.fastq --known-splicesite-infile ../temp/tmpaRXzeX/introns.tab --trim3 10
++ gzip
++ hisat -x ../hg19_hisat/hg19_hisat -p 4 -U ../temp/tmppqA3jq/SRR358999_1.fastq --known-splicesite-infile ../temp/tmpaRXzeX/introns.tab --trim3 10
++ gzip
++ hisat -x ../hg19_hisat/hg19_hisat -p 4 -U ../temp/tmp_65H7F/SRR358998_1.fastq --known-splicesite-infile ../temp/tmpaRXzeX/introns.tab --trim3 10
++ gzip
+30748883 reads; of these:
+  30748883 (100.00%) were unpaired; of these:
+    2268659 (7.38%) aligned 0 times
+    24270875 (78.93%) aligned exactly 1 time
+    4209349 (13.69%) aligned >1 times
+92.62% overall alignment rate
+29479423 reads; of these:
+  29479423 (100.00%) were unpaired; of these:
+    1944195 (6.60%) aligned 0 times
+    23616623 (80.11%) aligned exactly 1 time
+    3918605 (13.29%) aligned >1 times
+93.40% overall alignment rate
+30725894 reads; of these:
+  30725894 (100.00%) were unpaired; of these:
+    2026341 (6.59%) aligned 0 times
+    24308670 (79.11%) aligned exactly 1 time
+    4390883 (14.29%) aligned >1 times
+93.41% overall alignment rate
+30675478 reads; of these:
+  30675478 (100.00%) were unpaired; of these:
+    2024049 (6.60%) aligned 0 times
+    24355744 (79.40%) aligned exactly 1 time
+    4295685 (14.00%) aligned >1 times
+93.40% overall alignment rate
+30374972 reads; of these:
+  30374972 (100.00%) were unpaired; of these:
+    2113015 (6.96%) aligned 0 times
+    23360414 (76.91%) aligned exactly 1 time
+    4901543 (16.14%) aligned >1 times
+93.04% overall alignment rate
+31701232 reads; of these:
+  31701232 (100.00%) were unpaired; of these:
+    2048074 (6.46%) aligned 0 times
+    24953855 (78.72%) aligned exactly 1 time
+    4699303 (14.82%) aligned >1 times
+93.54% overall alignment rate
