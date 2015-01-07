@@ -28,6 +28,7 @@ if __name__ == '__main__':
                     print '\t'.join(fields)
             alignments = []
         alignments.append(tokens)
+        last_read = tokens[0]
     if alignments:
         if not any([int(fields[1]) & 256 for fields in alignments]):
             for fields in alignments:
