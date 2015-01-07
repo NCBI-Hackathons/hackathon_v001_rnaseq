@@ -13,7 +13,7 @@ SRA accession number <TAB> sample group <TAB> sample name
 
 Outputs BAM files. Each filename is in the following format:
 
-<sample name>.<sample group>.<SRA accession>.bam
+<sample name>.<sample group>.<SRA accession (SRR)>.bam
 
 Warnings: 1) index is not shared among hisat instances running in parallel;
 --mm would permit this, but it appears to be buggy right now.
@@ -24,6 +24,29 @@ vdb-config to change its location if home directory is on partition without
 much space
 
 Dependencies: HISAT, fastq-dump from sra-toolkit, samtools
+
+Command the team effectively ran to align 6 samples, 3 tumor, 3 normal, after
+running the script ec2_bootstrap.sh:
+python align.py -m /blast/rna/hackathon_v001_rnaseq/testset.txt
+--hisat-idx /blast/rna/hg19_hisat/hg19_hisat
+--gtf /blast/rna/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf
+--out /blast/rna/aligned/
+--fastq-dump-exe /blast/rna/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump
+--num-processes 6 --gzip-output --temp /blast/rna/temp
+--hisat-args "--trim3 10" 2>/blast/rna/hackathon_v001_rnaseq/6.log
+
+result: "downloaded and aligned 6 datasets in 1333.78372192 s."
+
+testset.txt contains the SRRs of the samples.
+
+Command the team is attempting to run to align 36 samples, 18 tumor, 18 normal:
+python align.py -m /blast/rna/hackathon_v001_rnaseq/36.manifest
+--hisat-idx /blast/rna/hg19_hisat/hg19_hisat
+--gtf /blast/rna/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf
+--out /blast/rna/aligned_36
+--fastq-dump-exe /blast/rna/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump
+--num-processes 4 --gzip-output --temp /blast/rna/temp
+--hisat-args "--trim3 10" 2>/blast/rna/rna_log_36
 """
 import multiprocessing
 import subprocess
