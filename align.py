@@ -87,6 +87,7 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                         'fastq dump command "{}" failed on try {}.'
                     ).format(fastq_dump_command, tries + 1)
                 tries += 1
+            else: break
         if exit_code:
                 return 'command "{}" exited with code {} on try {}.'.format(
                         fastq_dump_command, exit_code, tries
