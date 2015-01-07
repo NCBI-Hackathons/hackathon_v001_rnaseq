@@ -3,6 +3,9 @@
 use strict;
 use File::Temp;
 
+# File naming convention: chromosome_sample-name.sample-group.bam
+# Possible command-line parameters:
+# perl run_bambino.pl [-v=verbose] <SAM.GZ FILE> <OUTPUT DIRECTORY>
 
 my $nParams = scalar @ARGV;
 if($nParams<1)
@@ -15,7 +18,7 @@ my $strBAMfile = shift(@ARGV);
 
 my $strSampleName = undef;
 my $strSampleGroup = undef;
-if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
+if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.bam$/)
 {
 	$strSampleName = $1;
 	$strSampleGroup = $2;
@@ -23,7 +26,7 @@ if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.bam$/)
 
 if(!$strSampleName || !$strSampleGroup)
 {
-	print "ERROR: the filename must follow the pattern: sample-name.sample-group.original-name.bam\n";
+	print "ERROR: the filename must follow the pattern: chromosome_sample-name.sample-group.bam\n";
 	exit(0);
 }
 
