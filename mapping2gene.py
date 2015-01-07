@@ -12,9 +12,9 @@ if len(sys.argv) >= 2:
 bamOutfh = open(bamOutfn, 'r')
 refFlatfh = open(refFlatfn, 'r') 
 
-hitfn = '/blast/rna/mapping2gene/hit.txt'
+hitfn = 'hit.txt'
 hitfh = open(hitfn, 'w')  
-missfn = '/blast/rna/mapping2gene/miss.txt'
+missfn = 'miss.txt'
 missfh = open(missfn, 'w') 
   
 seen={}
