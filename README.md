@@ -53,3 +53,18 @@ An example command is
 ```
 perl run_bambino.pl /blast/rna/BAM/output/chr1_GSM823518.normal.bam > /blast/rna/BAM/output/chr1_GSM823518.normal.bambino
 ```
+d) Before start to map bambino output chromosome location to refGene, you need to download refFlat.txt(from UCSC http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/). Then, download and run mapping2gene.py. Inside the result file, header is "Gene name <TAB> refGene name <TAB> Chromosome <TAB> Transcription start <TAB> Transcription end <TAB> Variant found at <TAB> Alternate base <TAB> Reference base".
+
+An example command is
+```
+python mapping2gene.py /absolute/path/to/output/file(from run_bambino) /absolute/path/to/refFlat.txt
+```
+   This will produce hit.txt and miss.txt. hit.txt has candidate variant info. which mapped to inside the trascription region  of the gene.  
+
+e) To count RNA editing site, download and run count.sh with hit.txt. It will produce count_table.txt and all files realted to transition cases.
+
+An example command is
+```
+bash count.sh /absolute/path/to/hit.txt
+```
+
