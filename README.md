@@ -40,6 +40,7 @@ python align.py -m /blast/rna/hackathon_v001_rnaseq/testset.txt
 --hisat-args "--trim3 10" 2>/blast/rna/hackathon_v001_rnaseq/6.log
 ```
 Note that the manifest file described above is specified with the `-m` parameter.
+
 b) Run prepare_bam.pl to process the alignment files (SAM), remove the unmapped, low-quality or ambiguous reads (e.g. reads that map at multiple different locations). Command-line parameters can be viewed by running the script without parameters
 ```
 perl prepare_bam.pl
