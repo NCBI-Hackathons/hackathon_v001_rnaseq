@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 align.py
 
@@ -14,14 +15,13 @@ Outputs BAM files. Each filename is in the following format:
 
 <sample name>.<sample group>.<SRA accession>.bam
 
-WARNING: fastq-dump creates cache directory in home directory, so use
-vdb-config to change its location if home directory is on partition without
-much space
-
 Warnings: 1) index is not shared among hisat instances running in parallel;
 --mm would permit this, but it appears to be buggy right now.
 2) conversion to bam with samtools may fail because validation stringency
 is strict; if that happens, use --gzip-output instead
+3) fastq-dump creates cache directory in home directory, so use
+vdb-config to change its location if home directory is on partition without
+much space
 
 Dependencies: HISAT, fastq-dump from sra-toolkit, samtools
 """
@@ -51,7 +51,7 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                             fastq_dump_exe='fastq-dump', hisat_exe='hisat',
                             hisat_args='', samtools_exe='samtools',
                             num_threads=4, intron_file=None,
-                            gzip_output=False):
+                            gzip_output=False, retry_count=4):
     """ Uses fastq-dump to download sample FASTQ(s) and aligns data with HISAT.
 
         sra_accession: sample accession number on SRA
@@ -66,10 +66,12 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
         num_threads: argument of HISAT's -p parameter
         intron_file: intron file to pass to HISAT or None if not present
         gzip_output: gzips sam output rather than converting to bam
+        retry_count: number of times to attempt download before bailing
 
         Return value: None if successful or error message if unsuccessful
     """
     try:
+        tries = 0
         fastq_dump_command = (
                 '{fastq_dump_exe} -I --split-files {sra_accession} -O {out}'
             ).format(
@@ -77,12 +79,19 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                 sra_accession=sra_accession,
                 out=temp_dir
             )
-        exit_code = subprocess.Popen(fastq_dump_command, bufsize=-1,
-                                        shell=True).wait()
+        while tries < retry_count:
+            exit_code = subprocess.Popen(fastq_dump_command, bufsize=-1,
+                                            shell=True).wait()
+            if exit_code:
+                print >>sys.stderr, (
+                        'fastq dump command "{}" failed on try {}.'
+                    ).format(fastq_dump_command, tries + 1)
+                tries += 1
+            else: break
         if exit_code:
-            return 'command "{}" exited with code {}.'.format(
-                    fastq_dump_command, exit_code
-                )
+                return 'command "{}" exited with code {} on try {}.'.format(
+                        fastq_dump_command, exit_code, tries
+                    )
         fastq_files = [os.path.join(temp_dir, filename)
                         for filename in sorted(os.listdir(temp_dir))]
         if len(fastq_files) > 2:
@@ -102,7 +111,9 @@ def download_and_align_data(sra_accession, out_filename, hisat_idx, temp_dir,
                         else '-U {}'.format(fastq_files[0]))
             )
         if gzip_output:
-            pipe_command = 'gzip >{out_filename}'
+            pipe_command = 'gzip >{out_filename}'.format(
+                    out_filename=out_filename
+                )
         else:
             pipe_command = '{samtools_exe} view -bS - >{out_filename}'.format(
                     samtools_exe=samtools_exe, out_filename=out_filename
@@ -151,6 +162,10 @@ if __name__ == '__main__':
     parser.add_argument('--samtools-exe', type=str, required=False,
                             default='samtools',
                             help='path to SAMTools executable')
+    parser.add_argument('--retry-count', type=int, required=False,
+                            default=4,
+                            help=('number of times to reattempt a download '
+                                  'before bailing'))
     parser.add_argument('--gzip-output', action='store_const', const=True,
                             default=False,
                             help=('gzips sam output of hisat; does not use '
@@ -263,7 +278,7 @@ if __name__ == '__main__':
                         'line "{}" does not have at least 3 fields.'
                     ).format(line.strip())
                 if args.gzip_output:
-                    out_filename = ''.join([sample_name,
+                    out_filename = '.'.join([sample_name,
                             sample_group, sra_accession, 'sam', 'gz'
                         ])
                 else:
@@ -280,7 +295,7 @@ if __name__ == '__main__':
                                         args.fastq_dump_exe, args.hisat_exe,
                                         args.hisat_args, args.samtools_exe,
                                         args.num_threads, intron_file,
-                                        args.gzip_output),
+                                        args.gzip_output, args.retry_count),
                                 callback=return_values.append
                             )
                 sample_count += 1
@@ -302,3 +317,7 @@ if __name__ == '__main__':
     except (KeyboardInterrupt, SystemExit):
         pool.terminate()
         pool.join()
+    except RuntimeError:
+        pool.terminate()
+        pool.join()
+        raise
