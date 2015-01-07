@@ -6,7 +6,7 @@
 set -e
 
 # Set working directory here; make sure you have write access to it!
-WORK=/blast/rna
+WORK=$1
 
 cd $WORK
 # Download HISAT
