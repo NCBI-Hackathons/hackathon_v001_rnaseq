@@ -14,14 +14,13 @@ Outputs BAM files. Each filename is in the following format:
 
 <sample name>.<sample group>.<SRA accession>.bam
 
-WARNING: fastq-dump creates cache directory in home directory, so use
-vdb-config to change its location if home directory is on partition without
-much space
-
 Warnings: 1) index is not shared among hisat instances running in parallel;
 --mm would permit this, but it appears to be buggy right now.
 2) conversion to bam with samtools may fail because validation stringency
 is strict; if that happens, use --gzip-output instead
+3) fastq-dump creates cache directory in home directory, so use
+vdb-config to change its location if home directory is on partition without
+much space
 
 Dependencies: HISAT, fastq-dump from sra-toolkit, samtools
 """
