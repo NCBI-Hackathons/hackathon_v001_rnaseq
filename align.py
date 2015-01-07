@@ -46,7 +46,7 @@ python align.py -m /blast/rna/hackathon_v001_rnaseq/36.manifest
 --out /blast/rna/aligned_36
 --fastq-dump-exe /blast/rna/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump
 --num-processes 4 --gzip-output --temp /blast/rna/temp
---hisat-args "--trim3 10" 2>/blast/rna/rna_log_36
+--hisat-args "--trim3 10" 2>/blast/rna/36.log
 """
 import multiprocessing
 import subprocess
