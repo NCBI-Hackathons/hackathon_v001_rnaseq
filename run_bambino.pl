@@ -5,16 +5,21 @@ use File::Temp;
 
 # File naming convention: chromosome_sample-name.sample-group.bam
 # Possible command-line parameters:
-# perl run_bambino.pl [-v=verbose] <SAM.GZ FILE> <OUTPUT DIRECTORY>
+# perl run_bambino.pl [-v=verbose] <BAM FILE> [OUTPUT FILE]
 
 my $nParams = scalar @ARGV;
 if($nParams<1)
 {
-	print "USAGE: perl $0 <BAM FILE>\n";
+	print "USAGE: perl $0 <BAM FILE> [OUTPUT FILE]\n";
 	exit(0);
 }
 
 my $strBAMfile = shift(@ARGV);
+my $strOutFile = shift(@ARGV);
+if(!$strOutFile)
+{
+	$strOutFile = "$strBAMfile.bambino";
+}
 
 my $strSampleName = undef;
 my $strSampleGroup = undef;
@@ -46,23 +51,24 @@ my $strCMD = "java -Xmx3072m ".
                   
 `$strCMD`;
 
-print "Sample\tGroup\tChromosome\tPosition\tRead\tReference\tCoverage\tPercentage\n";
-
+open(OUT, ">$strOutFile");
 open(BAMBINO_OUT, $strTempBambino);
 my $strLine = <BAMBINO_OUT>;		# Skip the header
+print OUT "Sample\tGroup\tChromosome\tPosition\tRead\tReference\tCoverage\tPercentage\n";
 while($strLine = <BAMBINO_OUT>)
 {
 	chomp($strLine);
 	my @arrChunks = split(/\t/, $strLine);
 	next unless($arrChunks[5] eq 'SNP');
 	next unless($arrChunks[28]);
-	print "$strSampleName\t".
-	      "$strSampleGroup\t".
-	      "$arrChunks[3]\t".
-	      "$arrChunks[4]\t".
-	      "$arrChunks[10]\t".
-	      "$arrChunks[9]\t".
-	      "$arrChunks[7]\t".
-	      "$arrChunks[8]\n";
+	print OUT "$strSampleName\t".
+	          "$strSampleGroup\t".
+	          "$arrChunks[3]\t".
+	          "$arrChunks[4]\t".
+	          "$arrChunks[10]\t".
+	          "$arrChunks[9]\t".
+	          "$arrChunks[7]\t".
+	          "$arrChunks[8]\n";
 }
 close(BAMBINO_OUT);
+close(OUT);
