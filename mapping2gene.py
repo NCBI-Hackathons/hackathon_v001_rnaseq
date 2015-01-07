@@ -1,8 +1,15 @@
 #!/usr/bin/env python
+import sys
 
 bamOutfn = '/Users/yoons3/mapping2gene/output_test.tab'
-bamOutfh = open(bamOutfn, 'r')
 refFlatfn = '/Users/yoons3/mapping2gene/refFlat.txt'
+if len(sys.argv) >= 2:
+    bamOutfn = sys.argv[1]
+    refFlatfn = sys.argv[2]
+#print 'bam', bamOutfn
+#print 'ref', refFlatfn
+
+bamOutfh = open(bamOutfn, 'r')
 refFlatfh = open(refFlatfn, 'r') 
 
 hitfn = 'hit.txt'
@@ -17,13 +24,9 @@ for line in bamOutfh:
     seqLoc = line.split('\t')
     chr = seqLoc[3]
     loc = int(seqLoc[4])
-    print '::1::',chr, loc
     if chr not in seen:
         seen[chr] = []
     seen[chr].append(loc)
-#import pdb
-#pdb.set_trace()
-
 
 # parse the ref file
 for line in refFlatfh:
@@ -33,23 +36,25 @@ for line in refFlatfh:
     geneChr = geneLoc[2]
     txStart = geneLoc[4]
     txEnd = geneLoc[5]
+
     if geneChr in seen:
         all_snp_pos = seen[geneChr]
-        found = False
-        for snp_pos in all_snp_pos:
-            if int(txStart) <= snp_pos <= int(txEnd):
-                found = True
-                break
-                #print ' hit ', geneName, refName, geneChr, txStart, txEnd
-            else:
-                pass
-                #print ' miss ', geneName, refName, geneChr, txStart, txEnd
-        if found:
-             print ' hit ', geneName, refName, geneChr, txStart, txEnd
-
     else:
-        pass
-#        print 'no', geneName, refName, geneChr, txStart, txEnd
-#    print '  2  ', geneName, refName, geneChr, txStart, txEnd
+        all_snp_pos = []
+
+    found = False
+    for snp_pos in all_snp_pos:
+        if int(txStart) <= snp_pos <= int(txEnd):
+            found = True
+            break
+
+    if found:
+        print ' hit ', geneName, refName, geneChr, txStart, txEnd
+        hitfh.write('%s\t%s\t%s\t%s\t%s\n' % (geneName, refName, geneChr, txStart, txEnd))
+    else:
+        print 'no snp', geneName, refName, geneChr, txStart, txEnd
+        missfh.write('%s\t%s\t%s\t%s\t%s\n' % (geneName, refName, geneChr, txStart, txEnd))
+
+
 
 
