@@ -49,10 +49,13 @@ An example command is
 ```
 perl prepare_bam.pl -v /blast/rna/aligned/GSM823518.normal.SRR358994.sam.gz /blast/rna/BAM/output/
 ```
-c) Run run_bambino.pl to generate the variant call table. Each line of the output contains a call variant at a particular location within the genome and the reference base at the same location.
+c) Run run_bambino.pl to generate the variant call table. Each line of the output contains a call variant at a particular location within the genome and the reference base at the same location. Command-line parameters can be viewed by running the script without parameters
+```
+perl run_bambino.pl
+```
 An example command is
 ```
-perl run_bambino.pl /blast/rna/BAM/output/chr1_GSM823518.normal.bam > /blast/rna/BAM/output/chr1_GSM823518.normal.bambino
+perl run_bambino.pl /blast/rna/BAM/output/chr1_GSM823518.normal.bam /blast/rna/BAM/output/chr1_GSM823518.normal.bambino
 ```
 d) Before start to map bambino output chromosome location to refGene, you need to download refFlat.txt(from UCSC http://hgdownload.soe.ucsc.edu/goldenPath/hg19/database/). Then, download and run mapping2gene.py. Inside the result file, header is "Gene name <TAB> refGene name <TAB> Chromosome <TAB> Transcription start <TAB> Transcription end <TAB> Variant found at <TAB> Alternate base <TAB> Reference base".
 
