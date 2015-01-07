@@ -39,4 +39,18 @@ python align.py -m /blast/rna/hackathon_v001_rnaseq/testset.txt
 --num-processes 6 --gzip-output --temp /blast/rna/temp
 --hisat-args "--trim3 10" 2>/blast/rna/hackathon_v001_rnaseq/6.log
 ```
-2. ...
+
+2. Run prepare_bam.pl to process the alignment files (SAM), remove the unmapped, low-quality or ambiguous reads (e.g. reads that map at multiple different locations). Command-line parameters can be viewed by running the script without parameters
+```
+perl prepare_bam.pl
+```
+An example command is
+```
+perl prepare_bam.pl -v /blast/rna/aligned/GSM823518.normal.SRR358994.sam.gz /blast/rna/BAM/output/
+```
+
+3. Run run_bambino.pl to generate the variant call table. Each line of the output contains a call variant at a particular location within the genome and the reference base at the same location.
+An example command is
+```
+perl run_bambino.pl /blast/rna/BAM/output/chr1_GSM823518.normal.bam > /blast/rna/BAM/output/chr1_GSM823518.normal.bambino
+```
