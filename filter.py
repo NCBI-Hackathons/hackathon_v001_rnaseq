@@ -34,3 +34,4 @@ if __name__ == '__main__':
         if not any([int(fields[1]) & 256 for fields in alignments]):
             for fields in alignments:
                 print '\t'.join(fields)
+    sys.stdout.flush()
