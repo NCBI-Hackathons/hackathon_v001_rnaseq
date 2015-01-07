@@ -24,6 +24,7 @@ sh ec2_bootstrap.sh WORK
 ```
 where WORK is a work directory on the instance with at least ~three times as much space as the sample FASTQs demand.
 The pipeline is run as follows.
+
 1. Download and align data with align.py. Command-line parameters can be viewed by running
 ```
 python align.py --help
@@ -38,3 +39,4 @@ python align.py -m /blast/rna/hackathon_v001_rnaseq/testset.txt
 --num-processes 6 --gzip-output --temp /blast/rna/temp
 --hisat-args "--trim3 10" 2>/blast/rna/hackathon_v001_rnaseq/6.log
 ```
+2. ...
