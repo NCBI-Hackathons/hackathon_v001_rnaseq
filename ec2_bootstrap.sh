@@ -8,6 +8,7 @@ set -e
 # Set working directory here; make sure you have write access to it!
 WORK=$1
 
+mkdir -p $WORK
 cd $WORK
 # Download HISAT
 curl -O http://www.ccb.jhu.edu/software/hisat/downloads/hisat-0.1.2-beta-Linux_x86_64.zip || { echo "error downloading HISAT"; exit 1; }
