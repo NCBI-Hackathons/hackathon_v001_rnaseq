@@ -29,6 +29,7 @@ if __name__ == '__main__':
             alignments = []
         alignments.append(tokens)
         last_read = tokens[0]
+        line = sys.stdin.readline()
     if alignments:
         if not any([int(fields[1]) & 256 for fields in alignments]):
             for fields in alignments:
