@@ -5,7 +5,7 @@ use File::Temp;
 
 # File naming convention: sample-name.sample-group.original-name.sam.gz
 # Possible command-line parameters:
-# perl distribute_bams.pl [-v=verbose] <SAM.GZ FILE> <OUTPUT DIRECTORY>
+# perl prepare_bam.pl [-v=verbose] <SAM.GZ FILE> <OUTPUT DIRECTORY>
 
 my $TEMPDIR = '/blast/rna/BAM/tmp';
 
@@ -35,10 +35,12 @@ my $strOutputDir = shift(@ARGV);
 
 my $strSampleName = undef;
 my $strSampleGroup = undef;
-if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\..+\.sam.gz$/)
+my $strOriginalName = undef;
+if($strBAMfile =~ m/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.(.+)\.sam.gz$/)
 {
 	$strSampleName = $1;
 	$strSampleGroup = $2;
+	$strOriginalName = $3;
 }
 
 if(!$strSampleName || !$strSampleGroup)
@@ -126,6 +128,6 @@ my $strFilename = pop(@tmp);
 
 foreach my $strChromosome (@arrChromosomes)
 {
-    my $strCMD = "samtools view -b -h $strBAMsorted.bam $strChromosome > $strOutputDir/${strChromosome}_$strSampleName.$strSampleGroup.bam";
+    my $strCMD = "samtools view -b -h $strBAMsorted.bam $strChromosome > $strOutputDir/${strChromosome}_$strSampleName.$strSampleGroup.$strOriginalName.bam";
     `$strCMD`;
 }
