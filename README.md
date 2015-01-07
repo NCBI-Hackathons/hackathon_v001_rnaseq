@@ -3,7 +3,7 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DCGenomics/hackathon_v001_rnaseq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This RNA-seq analysis pipeline measures the frequency of each type of substitution (e.g., A->G) in each of a set of human RNA-seq samples on the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/sra). The samples are specified by a manifest file. Every line of the manifest file is either a comment (denoted by an initial # character) or three tab-separated fields:
+This RNA-seq analysis pipeline measures the frequency of each type of substitution (e.g., A->G) in each of a set of human RNA-seq samples on the [Sequence Read Archive](http://www.ncbi.nlm.nih.gov/sra). The samples, specified in a manifest file, are divided into two groups. The pipeline looks for a statistically significant differences in frequencies of substitutions between the two groups via ??????. Every line of the manifest file is either a comment (denoted by an initial # character) or three tab-separated fields:
 ```
 SRA run accession number <TAB> sample group <TAB> sample name
 ```
