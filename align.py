@@ -278,7 +278,7 @@ if __name__ == '__main__':
                         'line "{}" does not have at least 3 fields.'
                     ).format(line.strip())
                 if args.gzip_output:
-                    out_filename = ''.join([sample_name,
+                    out_filename = '.'.join([sample_name,
                             sample_group, sra_accession, 'sam', 'gz'
                         ])
                 else:
