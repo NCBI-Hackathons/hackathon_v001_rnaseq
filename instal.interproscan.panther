@@ -1,14 +1,21 @@
+##change to home directory
+##create interProscan directory
+cd /blast/rna/
 mkdir my_interproscan
 cd my_interproscan
+
+# Install iterProscan
 wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.8-49.0/interproscan-5.8-49.0-64-bit.tar.gz
 wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.8-49.0/interproscan-5.8-49.0-64-bit.tar.gz.md5
 
 # Recommended checksum to confirm the download was successful:
 md5sum -c interproscan-5.8-49.0-64-bit.tar.gz.md5
-# Must return *interproscan-5.8-49.0-64-bit.tar.gz: OK*
-# If not - try downloading the file again as it may be a corrupted copy.
 
-#untar the file
+# untar interPro
 tar -pxvzf interproscan-5.8-49.0-64-bit.tar.gz
 
-
+##Download the Panther model data to interproscan-5.8-49.0/data/ directory
+wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/data/panther-data-9.0.tar.gz
+wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/data/panther-data-9.0.tar.gz.md5
+md5sum -c panther-data-9.0.tar.gz.md5
+tar -pxvzf panther-data-9.0.tar.gz
