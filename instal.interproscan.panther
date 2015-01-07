@@ -1,0 +1,14 @@
+mkdir my_interproscan
+cd my_interproscan
+wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.8-49.0/interproscan-5.8-49.0-64-bit.tar.gz
+wget ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.8-49.0/interproscan-5.8-49.0-64-bit.tar.gz.md5
+
+# Recommended checksum to confirm the download was successful:
+md5sum -c interproscan-5.8-49.0-64-bit.tar.gz.md5
+# Must return *interproscan-5.8-49.0-64-bit.tar.gz: OK*
+# If not - try downloading the file again as it may be a corrupted copy.
+
+#untar the file
+tar -pxvzf interproscan-5.8-49.0-64-bit.tar.gz
+
+
