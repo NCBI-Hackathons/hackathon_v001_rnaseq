@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os
-
+import re
 
 print "I ran so far away"
 print sys.argv
@@ -36,8 +36,8 @@ for fn in myFiles:
     
     seen={}
     annot={}
-    # parse the bam output file - need to rule out header in the file
-    header = bamOutfh.readline()
+# parse the bam output file - need to rule out header in the file
+# header = bamOutfh.readline()
     for line in bamOutfh:
         if line.startswith("Sample\tGroup\tChromosome\tPosition\tRead"):
             continue
@@ -70,29 +70,53 @@ for fn in myFiles:
             all_snp_pos = []
     
         found = False
-        found_at = None
+        found_at = ''
         for snp_pos in all_snp_pos:
             if int(txStart) <= snp_pos <= int(txEnd):
                 found = True
     	        found_at = snp_pos
                 break
-    
+
+        #all_GSM823518.normal.SRR358994.bam.bambino
+        m=re.search("all_(\w+)\.(\w+)\.(\w+)", fn)
+        if m:
+            gsmnum = m.group(1)
+            tumornormal = m.group(2)
+            srrnum = m.group(3)
+            
+        else:
+            gsmnum = "?"
+            tumornormal = "?"
+            srrnum = "?"
+        try:
+            read, reference = annot[geneChr][found_at]
+        except Exception, e:
+            read, reference = 'Error %s' % geneChr, str(e)
+
+        mycols = [
+                gsmnum, 
+                tumornormal, 
+                srrnum, 
+                geneName, 
+                refName, 
+                geneChr, 
+                str(txStart), 
+                str(txEnd), 
+                str(found_at), 
+                read, 
+                reference]
+
         if found:
-            try:
-                read, reference = annot[geneChr][found_at]
-            except Exception, e:
-                read, reference = 'Error %s' % geneChr, str(e)
-            print ' hit ', fn, geneName, refName, geneChr, txStart, txEnd, found_at, read, reference
-            hitfh.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (fn, geneName, refName, geneChr, txStart, txEnd, found_at, read, reference))
+            print ' hit ', mycols
+            
+            hitfh.write('\t'.join(mycols))
+            hitfh.write('\n')
 
         else:
+            print ' no snp ', mycols
+            missfh.write('\t'.join(mycols))
+            missfh.write('\n')            
 
-            try:
-                read, reference = annot[geneChr][found_at]
-            except Exception, e:
-                read, reference = 'Error %s' % geneChr, str(e)
-            print ' no snp ', fn, geneName, refName, geneChr, txStart, txEnd, found_at, read, reference
-            missfh.write('%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' % (fn, geneName, refName, geneChr, txStart, txEnd, found_at, read, reference))
     
     
     
