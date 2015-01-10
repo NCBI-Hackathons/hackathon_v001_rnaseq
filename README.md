@@ -63,12 +63,6 @@ An example command is
 ```
 python mapping2gene.py /absolute/path/to/output/file(from run_bambino) /absolute/path/to/refFlat.txt
 ```
-   This will produce hit.txt and miss.txt. hit.txt has candidate variant info. which mapped to inside the trascription region  of the gene.  
+   This will produce hit.txt and miss.txt. hit.txt has candidate variant info. which mapped to inside the trascription region  of the gene. This process also makes count_mapping2gene.txt, which is a statistical table for every transition(A>C, A>G ,and etc) in each samples.
 
-e) To count RNA editing site, download and run count.sh with hit.txt. It will produce count_table.txt and all files realted to transition cases.
-
-An example command is
-```
-bash count.sh /absolute/path/to/hit.txt
-```
 
