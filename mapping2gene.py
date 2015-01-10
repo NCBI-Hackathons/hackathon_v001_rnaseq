@@ -27,19 +27,26 @@ hitfh = open(hitfn, 'w')
 missfn = '%smiss.txt' % writedir
 missfh = open(missfn, 'w') 
 
+
+memory = {}
+all_ref = set()
+all_read = set()
+all_gsmnum = set()
+
 for fn in myFiles:
+
     print fn
     bamOutfh = open(fn, 'r')
 
     refFlatfh = open(refFlatfn, 'r') 
 
-    
     seen={}
     annot={}
-# parse the bam output file - need to rule out header in the file
-# header = bamOutfh.readline()
+
     for line in bamOutfh:
         if line.startswith("Sample\tGroup\tChromosome\tPosition\tRead"):
+            # need to filter out the headers from the concatenated files
+
             continue
         seqLoc = line.split('\t')
         sample = seqLoc[0]
@@ -56,6 +63,7 @@ for fn in myFiles:
         annot[chr][loc] = read, reference
 
     # parse the ref file
+
     for line in refFlatfh:
         geneLoc = line.split('\t')
         geneName = geneLoc[0]
@@ -107,17 +115,49 @@ for fn in myFiles:
                 reference]
 
         if found:
-            print ' hit ', mycols
+            #print ' hit ', mycols
             
             hitfh.write('\t'.join(mycols))
             hitfh.write('\n')
 
+
+            if gsmnum not in memory:
+                memory[gsmnum] = {}
+
+            if reference not in memory[gsmnum]:
+                memory[gsmnum][reference] = {}
+
+            if read not in memory[gsmnum][reference]:
+                memory[gsmnum][reference][read] = 0
+        
+            memory[gsmnum][reference][read] += 1
+        
+
+            all_ref.add(reference)
+            all_read.add(read)
+            all_gsmnum.add(gsmnum)
+
+            
         else:
-            print ' no snp ', mycols
+            #print ' no snp ', mycols
             missfh.write('\t'.join(mycols))
             missfh.write('\n')            
 
-    
-    
-    
-    
+
+
+countsfn = 'nikki.txt'
+countsfh = file(countsfn, 'w')
+for gsmnum in all_gsmnum:
+    countsfh.write('\t%s' % gsmnum)
+countsfh.write("\n")
+
+for reference in all_ref:
+    for read in all_read:
+        if read == reference: continue
+        countsfh.write("%s>%s" % (reference, read))
+        for gsmnum in all_gsmnum:
+
+            num = memory.get(gsmnum,{}).get(reference,{}).get(read,0)
+            countsfh.write('\t%s' % num)
+        countsfh.write("\n")
+
