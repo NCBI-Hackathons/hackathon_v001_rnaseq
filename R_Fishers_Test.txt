@@ -1,0 +1,14 @@
+R
+data<-read.table("~/Documents/hackathon_v001_rnaseq/count_mapping2gene.txt",header=T)
+a <- row.names(data)
+Normal <- data$GSM823522+data$GSM823520+data$GSM823518
+Tumor <- data$GSM823523+data$GSM823520+data$GSM823521
+Normal_total <- sum(Normal)
+Tumor_total <- sum(Tumor)
+
+df = data.frame(Normal,Tumor, Normal_total, Tumor_total)
+
+row.names(df) <- a
+
+F.test <- apply(as.matrix(df), 1, function(x) 
+         fisher.test(matrix(round(x), ncol=2), workspace=1e9)$p.value)
