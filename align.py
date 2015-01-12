@@ -56,7 +56,6 @@ import os
 import shutil
 import sys
 import time
-from collections import defaultdict
 import signal
 
 def init_worker():
@@ -242,7 +241,7 @@ if __name__ == '__main__':
         intron_file = os.path.join(intron_dir, 'introns.tab')
         with open(intron_file, 'w') as intron_stream:
             with open(args.gtf) as gtf_stream:
-                exons = defaultdict(set)
+                exons = {}
                 for line in gtf_stream:
                     if line[0] == '#': continue
                     tokens = line.strip().split('\t')
@@ -267,7 +266,10 @@ if __name__ == '__main__':
                     id_index = id_index[0]
                     attribute[id_index] = attribute[id_index].strip()
                     quote_index = attribute[id_index].index('"')
-                    exons[attribute[id_index][quote_index+1:-1]].add(
+                    transcript_id = attribute[id_index][quote_index+1:-1]
+                    if transcript_id not in exons:
+                        exons[transcript_id] = set()
+                    exons[transcript_id].add(
                             (tokens[0], int(tokens[3]), int(tokens[4]), sign)
                         )
                 for transcript_id in exons:
