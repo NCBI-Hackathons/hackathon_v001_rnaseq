@@ -12,3 +12,5 @@ row.names(df) <- a
 
 F.test <- apply(as.matrix(df), 1, function(x) 
          fisher.test(matrix(round(x), ncol=2), workspace=1e9)$p.value)
+
+ write.table(F.test, "~/Documents/hackathon_v001_rnaseq/Fishertest.output.txt", quote = F, sep = "\t", row.names = T, col.names=c("pval"))
